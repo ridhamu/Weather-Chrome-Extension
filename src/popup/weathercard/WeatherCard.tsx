@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { fetchOpenWeatherData, OpenWeatherData } from '../../utils/api';
+import {
+  fetchOpenWeatherData,
+  OpenWeatherData,
+  OpenWeatherDataTempscale,
+} from '../../utils/api';
 import {
   Card,
   CardContent,
@@ -9,6 +13,7 @@ import {
   CardActions,
   Button,
 } from '@mui/material';
+import { LocalStorageOptions } from '../../utils/storage';
 
 const WeatherCardContainer: React.FC<{
   children: React.ReactNode;
@@ -36,19 +41,20 @@ type Status = 'ready' | 'loading' | 'error';
 
 const WeatherCard: React.FC<{
   city: string;
+  tempScale: OpenWeatherDataTempscale;
   onDelete?: () => void;
-}> = ({ city, onDelete }) => {
+}> = ({ city, onDelete, tempScale }) => {
   const [weatherInfo, setWeatherInfo] = useState<OpenWeatherData | null>(null);
   const [weatherDataStatus, setWeatherDataStatus] = useState<Status>('loading');
   useEffect(() => {
-    fetchOpenWeatherData(city)
+    fetchOpenWeatherData(city, tempScale)
       .then((data) => {
         console.log(`nama kota adalah: ${data.name}`);
         setWeatherInfo(data);
         setWeatherDataStatus('ready');
       })
       .catch((err) => setWeatherDataStatus('error'));
-  }, [city]);
+  }, [city, tempScale]);
 
   if (weatherDataStatus === 'error' || weatherDataStatus === 'loading') {
     return (
@@ -68,10 +74,12 @@ const WeatherCard: React.FC<{
       <WeatherCardContainer onDelete={onDelete}>
         <Typography variant="h4">{weatherInfo.name}</Typography>
         <Typography variant="body1">
-          Temperature: {Math.round(weatherInfo.main.temp)} &deg;C
+          Temperature: {Math.round(weatherInfo.main.temp)}&deg;
+          {tempScale === 'metric' ? 'C' : 'F'}
         </Typography>
         <Typography variant="body1">
-          Feels Like: {Math.round(weatherInfo.main.feels_like)} &deg;C
+          Feels Like: {Math.round(weatherInfo.main.feels_like)}&deg;
+          {tempScale === 'metric' ? 'C' : 'F'}
         </Typography>
       </WeatherCardContainer>
     </>
