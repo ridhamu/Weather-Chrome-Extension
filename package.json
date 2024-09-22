@@ -1,5 +1,5 @@
 {
-  "name": "6-WEATHER-EXTENSION",
+  "name": "weather-report-extension",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
