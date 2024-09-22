@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "React Extension",
-  "description": "React boilerplate for Extension project",
+  "name": "Weather Report",
+  "description": "a simple weather report extension",
   "version": "1.0.0",
   "icons": {
     "16": "./icons/icon-16.png",
@@ -10,7 +10,7 @@
     "128": "./icons/icon-128.png"
   },
   "action": {
-    "default_title": "React Extension",
+    "default_title": "Weather Report",
     "default_popup": "popup.html"
   },
   "options_page": "option.html",
