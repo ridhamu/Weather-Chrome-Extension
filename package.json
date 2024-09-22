@@ -11,6 +11,11 @@
   "license": "ISC",
   "description": "React Extension boilerplate",
   "devDependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/roboto": "^5.1.0",
+    "@mui/icons-material": "^6.1.1",
+    "@mui/material": "^6.1.1",
     "@types/chrome": "^0.0.270",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
