@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
 import {
+  getWeatherIconSrc,
   fetchOpenWeatherData,
   OpenWeatherData,
   OpenWeatherDataTempscale,
@@ -12,8 +13,9 @@ import {
   Typography,
   CardActions,
   Button,
+  Grid2,
 } from '@mui/material';
-import { LocalStorageOptions } from '../../utils/storage';
+import './WeatherCard.css';
 
 const WeatherCardContainer: React.FC<{
   children: React.ReactNode;
@@ -27,7 +29,7 @@ const WeatherCardContainer: React.FC<{
           <CardActions>
             {onDelete && (
               <Button color="secondary" onClick={onDelete}>
-                Delete
+                <Typography className="bodyFont">Delete</Typography>
               </Button>
             )}
           </CardActions>
@@ -60,7 +62,8 @@ const WeatherCard: React.FC<{
     return (
       <>
         <WeatherCardContainer onDelete={onDelete}>
-          <Typography variant="body1">
+          <Typography className="headingFont">{city}</Typography>
+          <Typography className="bodyFont">
             {weatherDataStatus === 'loading'
               ? 'Retrieving data ....'
               : `Error: could not retrieve data for city ${city}`}
@@ -72,15 +75,27 @@ const WeatherCard: React.FC<{
   return (
     <>
       <WeatherCardContainer onDelete={onDelete}>
-        <Typography variant="h4">{weatherInfo.name}</Typography>
-        <Typography variant="body1">
-          Temperature: {Math.round(weatherInfo.main.temp)}&deg;
-          {tempScale === 'metric' ? 'C' : 'F'}
-        </Typography>
-        <Typography variant="body1">
-          Feels Like: {Math.round(weatherInfo.main.feels_like)}&deg;
-          {tempScale === 'metric' ? 'C' : 'F'}
-        </Typography>
+        <Grid2 container justifyContent={'space-around'}>
+          <Grid2>
+            <Typography className="headingFont">{weatherInfo.name}</Typography>
+            <Typography className="bodyFont-Temp">
+              {Math.round(weatherInfo.main.temp)}&deg;
+              {tempScale === 'metric' ? 'C' : 'F'}
+            </Typography>
+            <Typography className="bodyFont">
+              Feels Like: {Math.round(weatherInfo.main.feels_like)}&deg;
+              {tempScale === 'metric' ? 'C' : 'F'}
+            </Typography>
+          </Grid2>
+          <Grid2>
+            {weatherInfo.weather.length > 0 && (
+              <>
+                <img src={getWeatherIconSrc(weatherInfo.weather[0].icon)} />
+                <Typography>{weatherInfo.weather[0].main}</Typography>
+              </>
+            )}
+          </Grid2>
+        </Grid2>
       </WeatherCardContainer>
     </>
   );

@@ -1,4 +1,4 @@
-import { LocalStorageOptions } from "./storage";
+import { LocalStorageOptions } from './storage';
 
 const OPEN_WEATHER_API_KEY: string = '2f14b7611a263460947f8455c6d602f9';
 
@@ -17,12 +17,16 @@ export interface OpenWeatherData {
   weather: {
     main: string;
     description: string;
+    icon: string
   }[];
 }
 
-export type OpenWeatherDataTempscale = 'metric' | 'imperial'; 
+export type OpenWeatherDataTempscale = 'metric' | 'imperial';
 
-export async function fetchOpenWeatherData(city: string, tempScale: OpenWeatherDataTempscale): Promise<OpenWeatherData> {
+export async function fetchOpenWeatherData(
+  city: string,
+  tempScale: OpenWeatherDataTempscale
+): Promise<OpenWeatherData> {
   const response = fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${tempScale}&appid=${OPEN_WEATHER_API_KEY}`
   );
@@ -33,4 +37,8 @@ export async function fetchOpenWeatherData(city: string, tempScale: OpenWeatherD
 
   const data = (await response).json();
   return data;
+}
+
+export function getWeatherIconSrc(iconCode: string) {
+  return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }

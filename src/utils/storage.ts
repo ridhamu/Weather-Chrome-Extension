@@ -6,6 +6,8 @@ export interface LocalStorage {
 }
 
 export interface LocalStorageOptions {
+  autoLayout: boolean;
+  homeCity: string;
   tempScale: OpenWeatherDataTempscale;
 }
 

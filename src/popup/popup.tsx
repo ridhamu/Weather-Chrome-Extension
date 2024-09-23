@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import WeatherCard from './weathercard';
-import { Box, IconButton, InputBase, Paper, Grid2 } from '@mui/material';
+import WeatherCard from '../components/weathercard';
+import {
+  Box,
+  IconButton,
+  InputBase,
+  Paper,
+  Grid2,
+  Typography,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import PictureInPictureIcon from '@mui/icons-material/PictureInPicture';
 import {
   setStoredCities,
   setStoredOptions,
@@ -10,11 +18,10 @@ import {
   getStoredOptions,
   LocalStorageOptions,
 } from '../utils/storage';
+import { Messages } from '../utils/messages';
 import './popup.css';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import '@fontsource/roboto';
+
 
 const App: React.FC<{}> = () => {
   const [cityName, setCityName] = useState<string[]>([]);
@@ -52,7 +59,17 @@ const App: React.FC<{}> = () => {
       tempScale: options.tempScale === 'metric' ? 'imperial' : 'metric',
     };
 
-    setStoredOptions(updateOptions).then(() => setOptions(updateOptions)); 
+    setStoredOptions(updateOptions).then(() => setOptions(updateOptions));
+  };
+
+  const handleOverlayButton = () => {
+    chrome.tabs.query({
+      active: true
+    }, (tabs) => {
+      if (tabs.length > 0) {
+        chrome.tabs.sendMessage(tabs[0].id, Messages.TOGGLE_OVERLAY); 
+      }
+    }); 
   };
 
   if (!options) {
@@ -62,9 +79,14 @@ const App: React.FC<{}> = () => {
   return (
     <>
       <Box mx={'2 px'} my={'2 px'}>
-        <h1>Check City Weather in Real Time!</h1>
+        <Box mx={'4px'} my={'16px'} display="flex" justifyContent="center">
+          <Typography variant="h5" align="center">
+            Check City Weather in Real Time!
+          </Typography>
+        </Box>
+
         {/* Input field to add new city */}
-        <Grid2 container justifyContent={'space-evenly'}>
+        <Grid2 container justifyContent={'center'} spacing={1}>
           <Grid2>
             <Paper>
               <Box px={'15px'} py={'4px'}>
@@ -80,13 +102,37 @@ const App: React.FC<{}> = () => {
             </Paper>
           </Grid2>
           <Grid2>
-            <Paper>
+            <Paper
+              sx={{
+                height: '48px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
               <IconButton onClick={handleTempScaleButton}>
                 {options.tempScale === 'metric' ? '\u2103' : '\u2109'}
               </IconButton>
             </Paper>
           </Grid2>
+          <Grid2>
+            <Paper
+              sx={{
+                height: '48px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton onClick={handleOverlayButton}>
+                <PictureInPictureIcon />
+              </IconButton>
+            </Paper>
+          </Grid2>
         </Grid2>
+        {options.homeCity !== '' && (
+          <WeatherCard city={options.homeCity} tempScale={options.tempScale} />
+        )}
         {cityName.map((city, index) => (
           <WeatherCard
             city={city}
